@@ -5,6 +5,9 @@
 
 // Speech Object
 let speech;
+let counter = 0;
+
+let lastDecharge = Date.now();
 
 function setup() {
   noCanvas();
@@ -19,16 +22,20 @@ function setup() {
 
   // DOM element to display results
   let output = select('#speech');
+  let delaiMin = 2000;
 
   // Speech recognized event
   function gotSpeech() {
-    // Something is there
-    // Get it as a string, you can also get JSON with more info
-    console.log(speechRec);
+
     if (speechRec.resultValue) {
       let said = speechRec.resultString;
-      // Show user
-      output.html(said);
+      console.log(said);
+      if(said.toLowerCase().includes("et compagnie") && Date.now() - lastDecharge > delaiMin){
+        console.log("BOOOOM");
+        counter += 1;
+        lastDecharge = Date.now();
+        output.html("BOOM "+counter.toString());
+      }
     }
   }
 }
