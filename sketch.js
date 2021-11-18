@@ -13,6 +13,7 @@ function setup() {
   noCanvas();
   // Create a Speech Recognition object with callback
   speechRec = new p5.SpeechRec('fr-FR', gotSpeech);
+
   // "Continuous recognition" (as opposed to one time only)
   let continuous = true;
   // If you want to try partial recognition (faster, less accurate)
@@ -22,7 +23,7 @@ function setup() {
 
   // DOM element to display results
   let output = select('#speech');
-  let delaiMin = 2000;
+  let delaiMin = 4000;
 
   // Speech recognized event
   function gotSpeech() {
@@ -30,11 +31,15 @@ function setup() {
     if (speechRec.resultValue) {
       let said = speechRec.resultString;
       console.log(said);
-      if(said.toLowerCase().includes("et compagnie") && Date.now() - lastDecharge > delaiMin){
+      if(said.toLowerCase().includes("et compagnie") && Date.now() - lastDecharge > delaiMin && said.length < 20){
         console.log("BOOOOM");
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open( "GET", "http://192.168.137.74/PULSE=1", false ); // false for synchronous request
+        xmlHttp.send( null );
         counter += 1;
         lastDecharge = Date.now();
         output.html("BOOM "+counter.toString());
+      
       }
     }
   }
